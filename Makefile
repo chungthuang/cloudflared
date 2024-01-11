@@ -128,6 +128,7 @@ ifeq ($(FIPS), true)
 	$(info Building cloudflared with go-fips)
 	cp -f fips/fips.go.linux-amd64 cmd/cloudflared/fips.go
 endif
+	go env
 	GOOS=$(TARGET_OS) GOARCH=$(TARGET_ARCH) $(ARM_COMMAND) go build -mod=vendor $(GO_BUILD_TAGS) $(LDFLAGS) $(IMPORT_PATH)/cmd/cloudflared
 ifeq ($(FIPS), true)
 	rm -f cmd/cloudflared/fips.go
@@ -170,7 +171,6 @@ test-ssh-server:
 install-go:
 	rm -rf ${CF_GO_PATH}
 	./.teamcity/install-cloudflare-go.sh
-	go env
 
 .PHONY: cleanup-go
 cleanup-go:
