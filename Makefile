@@ -1,3 +1,5 @@
+.NOTPARALLEL:
+
 VERSION       := $(shell git describe --tags --always --match "[0-9][0-9][0-9][0-9].*.*")
 MSI_VERSION   := $(shell git tag -l --sort=v:refname | grep "w" | tail -1 | cut -c2-)
 #MSI_VERSION expects the format of the tag to be: (wX.X.X). Starts with the w character to not break cfsetup.
@@ -128,7 +130,6 @@ ifeq ($(FIPS), true)
 	$(info Building cloudflared with go-fips)
 	cp -f fips/fips.go.linux-amd64 cmd/cloudflared/fips.go
 endif
-	go env
 	GOOS=$(TARGET_OS) GOARCH=$(TARGET_ARCH) $(ARM_COMMAND) go build -mod=vendor $(GO_BUILD_TAGS) $(LDFLAGS) $(IMPORT_PATH)/cmd/cloudflared
 ifeq ($(FIPS), true)
 	rm -f cmd/cloudflared/fips.go
@@ -169,12 +170,12 @@ test-ssh-server:
 
 .PHONY: install-go
 install-go:
-	rm -rf ${CF_GO_PATH}
+	rm -rf $(CF_GO_PATH)
 	./.teamcity/install-cloudflare-go.sh
 
 .PHONY: cleanup-go
 cleanup-go:
-	rm -rf ${CF_GO_PATH}
+	rm -rf $(CF_GO_PATH)
 
 cloudflared.1: cloudflared_man_template
 	sed -e 's/\$${VERSION}/$(VERSION)/; s/\$${DATE}/$(DATE)/' cloudflared_man_template > cloudflared.1
