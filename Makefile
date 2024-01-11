@@ -170,6 +170,7 @@ test-ssh-server:
 install-go:
 	rm -rf ${CF_GO_PATH}
 	./.teamcity/install-cloudflare-go.sh
+	go env
 
 .PHONY: cleanup-go
 cleanup-go:
